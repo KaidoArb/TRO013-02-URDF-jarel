@@ -213,29 +213,89 @@
     <child link="imu_link"/>
     <origin xyz="0 0 0.01" rpy="0 0 0"/>
   </joint>
+<!-- ============================================= -->
 
-  <!-- ============================================================ -->
-  <!-- ANALÜÜSI ÜLESANDED                                          -->
-  <!-- ============================================================ -->
-  <!--
-  Ülesanne 1: Ava see fail ja vasta küsimustele:
-    1. Mitu link'i on mudelis? (vihje: grep -c '<link name=')
-    2. Mitu joint'i? Mis tüüpi on ratta joint'id ja miks?
-    3. Mis vahe on visual ja collision geomeetrial?
-    4. Miks on base_footprint eraldi base_link'ist?
+<!-- ULTRAHELI ANDUR roboti esiküljel              -->
 
-  Ülesanne 2: Visualiseeri ja uuri TF puud:
-    1. Käivita: ros2 launch minu_description display.launch.py
-    2. RViz2-s: lülita sisse TF display, uuri koordinaatsüsteeme
-    3. Genereeri TF puu: ros2 run tf2_tools view_frames
-    4. Selgita: kuidas laser_link asukoht base_link suhtes
-       mõjutab /scan andmete tõlgendamist?
+<!-- Mida see teeb? Lisab väikese silindrilise     -->
 
-  Ülesanne 3: Võrdle URDF ja PROTO rolli:
-    1. Vaata PROTO: /workspace/ros2_ws/src/yahboom_webots/protos/YahboomRobot.proto
-    2. Vaata URDF:  /workspace/ros2_ws/src/yahboom_webots/resource/yahboom_webots.urdf
-    3. Selgita: mis infot annab PROTO Webots'ile ja mis infot annab URDF ROS 2-le?
-    4. Miks on mõlemat vaja?
-  -->
+<!-- anduri kujutise roboti ette                   -->
 
+<!-- ============================================= -->
+
+
+
+<!-- Anduri füüsiline kehaosa (link) -->
+
+<link name="sonar_link">
+
+  <!-- Kuidas andur välja näeb -->
+
+  <visual>
+
+    <!-- Silindrikujuline andur: raadius 8mm, pikkus 15mm -->
+
+    <geometry>
+
+      <cylinder radius="0.008" length="0.015"/>
+
+    </geometry>
+
+    <!-- Hobedane värv (nagu pärisandur) -->
+
+    <material name="sonar_silver">
+
+      <color rgba="0.7 0.7 0.7 1.0"/>
+
+    </material>
+
+  </visual>
+
+
+
+  <!-- Kokkupõrke kuju (sama mis visuaal, sest andur on väike) -->
+
+  <collision>
+
+    <geometry>
+
+      <cylinder radius="0.008" length="0.015"/>
+
+    </geometry>
+
+  </collision>
+
+
+
+  <!-- Inertsia - kasutame silindri makrot -->
+
+  <!-- mass = 10 grammi, raadius = 8mm, pikkus = 15mm -->
+
+  <xacro:cylinder_inertia m="0.01" r="0.008" l="0.015"/>
+
+</link>
+
+
+
+<!-- Liiges, mis kinnitab anduri kere külje -->
+
+<!-- fixed = jäik ühendus, andur ei liigu kere suhtes -->
+
+<joint name="sonar_joint" type="fixed">
+
+  <!-- Vanem on roboti kere -->
+
+  <parent link="base_link"/>
+
+  <!-- Laps on ultraheliandur -->
+
+  <child link="sonar_link"/>
+
+  <!-- Anduri asukoht kere suhtes: -->
+
+  <!-- x=0.08 (8cm ette), y=0 (keskel), z=0.03 (3cm üles) -->
+
+  <origin xyz="0.08 0 0.03" rpy="0 0 0"/>
+
+</joint>
 </robot>
